@@ -6,21 +6,24 @@
 Welcome to My Document For Dev's documentation!
 ===============================================
 
+マイドキュメント
+-------------------
+
 Contents:
 
-
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 2
 
    sphinx/index
    apple/index
    android/index
 
 
+---------
+
 Indices and tables
 ==================
 
-* :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
 

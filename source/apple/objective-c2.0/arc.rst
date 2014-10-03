@@ -1,3 +1,6 @@
+
+.. index:: ARC
+
 ARC(Automatic Reference Counting)
 ======================================
 
