@@ -91,9 +91,10 @@ ARC基本事項まとめ
 - コンパイラにはclangを使い、オプションとして「-fobjc-arc」を与える。
 
 
+.. Note::
 
-
-
+	XCodeには、手動のカウンタ管理方式のプロジェクトをARC対応に変換する機能が用意されています。
+	メニューの「Edit＞Convert to Objective-C ARC...」を選択します。
 
 
 
