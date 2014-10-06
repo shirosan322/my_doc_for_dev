@@ -7,6 +7,7 @@ Objective-C 2.0
 
    compile
    arc
+   property
 
 
 :ref:`索引 <genindex>`
