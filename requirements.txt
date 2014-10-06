@@ -1,0 +1,6 @@
+Sphinx==1.2.2
+sphinx-rtd-theme==0.1.6
+Pillow==2.5.2
+sphinxcontrib-blockdiag==1.4.4
+sphinxjp.themecore==0.2.0
+sphinxjp.themes.sphinxjp==0.3.1
