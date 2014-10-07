@@ -161,8 +161,66 @@ NSObjectクラス
 
 	引数として指定したセレクタに対応するインスタンスメソッドを調べて、その実装である関数へのポインタを返します。
 
+ターゲット-アクション・パラダイム
+-------------------------------------
 
+SEL型変数を用いることで、実行されるメソッドを動的に変更することが可能です。
+Applicationフレームワークでは実際に、この仕組みを用いてGUI部品間のメッセージ送受信を実現しています。
 
+.. code-block:: objective-c
+
+	@interface myCell : NSObject {
+		SEL action;
+		id  target;
+	}
+	- (void)setAction:(SEL)aSelector;
+	- (void)setTarget:(id)anObject;
+	- (void)performClick:(id)sender;
+	...
+	@end
+
+	@implementation myCell
+
+	- (void)setAction:(SEL)aSelector {
+		action = aSelector;
+	}
+
+	- (void)setTarget:(id)anObject {
+		target = anObject;
+	}
+
+	- (void)performClick:(id)sender {
+		(void)[target performSelector:action withOvject:sender];
+	}
+	...
+	@end
+
+このクラスでは、SEL型変数actionと、id型変数targetをインスタンス変数として持っています。このクラスのインスタンスに対してperformClick:メッセージが送られると、targetが保持しているオブジェクトに対してactionが表すメッセージが送られます。このとき、引数にはperformClick:の引数が使われます。
+
+このようにして、ApplicationフレームワークではGUI部品オブジェクト間の通信を実現しています。これを **ターゲット-アクション・パラダイム** (target-action paradigm)、あるいは **ターゲット-アクション・メカニズム** と読んでいます。
+
+アクションメソッド
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: objective-c
+
+	- (void) XXXXXX:(id)sender;
+	
+Applicationフレームワークの中でメッセージとして使用されるのは、このようなid型の引数を１つだけ持ち、戻り値のない形式のメソッドだけです（XXXXXXは任意のメッセージキーワード）。この形式のメソッドを **アクションメソッド** (action method)と呼びます。
+あらかじめ設定されたtagetに、actionで指定されたメッセージが送られます。メッセージの引数には、通常、そのGUI部品のidが渡されます。これによって、targetで指定されたレシーバ側はのオブジェクトは、どの部品からどのようなメッセージが送られたのかを知ることができます。
+
+.. Note::
+
+	通常はターゲットとアクションの指定に、それぞれのメソッド「setTarget:」と「setAction:」が使われます。なお、カウンタ管理方式で利用している場合でも、setTarget:は引数のオブジェクトを保持（retain）しません。ARCを利用する場合には弱い参照を使うことが推奨されています。
+
+iPhoneやiPadのGUI構築のためのフレームワークであるUIKitは、Applicationフレームワークと同じ概念を共通して持っているのですが、所々で異なる部分があります。
+Applicationフレームワークのアクションメソッドの形式は１つでしたが、UIKitフレームワークでは、次の３つの形式がアクションメソッドとされています。
+
+(1) \- (void)XXXXXX;
+
+(2) \- (void)XXXXXX:(id)sender;
+
+(3) \- (void)XXXXXX:(id)sender forEvent:(UIEvent*)event;
 
 
 
