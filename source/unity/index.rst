@@ -16,6 +16,3 @@ Contents:
 	view_types
 	glossary
 
-
-:ref:`索引 <genindex>`
-==========================
