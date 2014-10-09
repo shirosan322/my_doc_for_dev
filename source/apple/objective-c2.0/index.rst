@@ -9,6 +9,7 @@ Objective-C 2.0
    arc
    property
    nsobject
+   category
 
 
 :ref:`索引 <genindex>`
