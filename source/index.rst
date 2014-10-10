@@ -18,6 +18,7 @@ Contents:
    apple/index
    android/index
    unity/index
+   midi/index
 
 
 ---------
