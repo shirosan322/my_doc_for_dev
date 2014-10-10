@@ -10,7 +10,7 @@ Objective-C 2.0
    property
    nsobject
    category
-
+   protocol
 
 :ref:`索引 <genindex>`
 
