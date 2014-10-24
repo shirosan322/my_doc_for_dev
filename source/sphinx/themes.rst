@@ -42,8 +42,8 @@ Read the Docs Theme（sphinx_rtd_theme）
 URL
 -----
 
- http://docs.readthedocs.org/en/latest/theme.html
- http://read-the-docs.readthedocs.org/en/latest/theme.html
+| http://docs.readthedocs.org/en/latest/theme.html
+| http://read-the-docs.readthedocs.org/en/latest/theme.html
 
 インストール方法
 --------------------
@@ -73,8 +73,8 @@ Sphinx.jpのサイトと同じテーマ。
 URL
 -----
 
- https://pypi.python.org/pypi/sphinxjp.themes.sphinxjp/0.3.1
- http://pythonhosted.org/sphinxjp.themes.sphinxjp/
+| https://pypi.python.org/pypi/sphinxjp.themes.sphinxjp/0.3.1
+| http://pythonhosted.org/sphinxjp.themes.sphinxjp/
 
 インストール方法
 --------------------
@@ -100,8 +100,8 @@ Sphinxを使用してhtmlスライドを作成できるテーマ。
 URL
 -----
 
-https://pypi.python.org/pypi/sphinxjp.themes.s6/0.3.0
-http://pythonhosted.org/sphinxjp.themes.s6/
+| https://pypi.python.org/pypi/sphinxjp.themes.s6/0.3.0
+| http://pythonhosted.org/sphinxjp.themes.s6/
 
 インストール方法
 ------------------
