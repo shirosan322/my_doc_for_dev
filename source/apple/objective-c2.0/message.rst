@@ -28,10 +28,10 @@ Foundationフレームワークに用意されている **NSTimer** クラスを
 .. code-block:: objective-c
 
 	+ (NSTimer *) scheduledTimerWithTimeInterval: (NSTimerInterval) sec
-	                               target: (id)target
-	                             selector: (SEL)aSelector
-	                             userInfo: (id)userInfo
-	                              repeats: (BOOL)repeats
+	                                      target: (id)target
+	                                    selector: (SEL)aSelector
+	                                    userInfo: (id)userInfo
+	                                     repeats: (BOOL)repeats
 
 - sec
 	ここで指定された秒数が経過するとタイマが起動する。NSTimerIntervalは実数で、現在はdouble型にtypedefされています。
@@ -82,8 +82,8 @@ Foundationフレームワークに用意されている **NSTimer** クラスを
 .. code-block:: objective-c
 
 	- (void) performSelector: (SEL) aSelector
-	          withObject: (id)anArgument
-	           afterDelay: (NSTimerInterval) delay
+	              withObject: (id)anArgument
+	              afterDelay: (NSTimerInterval) delay
 
 このメッセージを送信してから、少なくともdelay秒経過してから、aSelectorの示すメッセージをanArgumentを引数としてレシーバに送信します。
 
@@ -91,8 +91,8 @@ Foundationフレームワークに用意されている **NSTimer** クラスを
 .. code-block:: objective-c
 
 	+ (void) cancelPreviousPrformRequestsWithTarget: (id)aTarget
-	                                selector: (SEL)aSelector
-	                              withObject: (id) anArgument
+	                                       selector: (SEL)aSelector
+	                                     withObject: (id) anArgument
 
 インスタンスメソッドperformSelector:withObject:afterDelayを使って登録された実行リクエストがあればキャンセルします。このメソッドでは、指定したセレクタと引数のオブジェクトも一致しなければなりませんが、メソッド **cancelPreviousPrformRequestsWithTarget:** ではターゲットだけが一致すればキャンセルできます。
 
@@ -107,9 +107,39 @@ Foundationフレームワークに用意されている **NSTimer** クラスを
 オブジェクト指向では一般に、デリゲート（あるいはデリゲーション）を、**「あるオブジェクトが、処理できないメッセージを受け取ったときに別のオブジェクトに処理を代行してもらう機構」** であると説明しています。
 
 
+Cocoa環境のデリゲート
+---------------------------
+
+　Cocoa環境の場合には、処理できないメッセージというよりも、そのアプリケーションに必要とされる処理を付け加えるための「増設」オブジェクトといった感じが近いです。
 
 
+アンドゥ機構
+=====================
+
+　Cocoa環境では、一度行った操作を取り消し（アンドゥ:undo）したり、再びやり直し（リドゥ:redo）したりするために、専門のクラス **NSUndoManager** を備えています。
+　いったん行った操作を取り消すには、操作前の状態を記録しておいて元に戻す方法と、行った操作と逆の効果を持つ操作を行う方法が考えられますが、NSUndoManagerは後者の方法によてUndoを実装します。
+
+　複数のドキュメントウィンドウがあるアプリケーションでは、ウィンドウ毎1つのアンドゥマネージャを備えると良いでしょう。アプリケーションによっては１つに限定することもできます、なお、ApplicationフレームワークのNSDocumentクラスを用いてドキュメントウィンドウのクラスを管理を行うアプリケーションでは、NSDocumentのインスタンスからアンドゥマネージャを取得することができます。
+
+　アンドゥの仕組みは、基本的にはアプリケーションで何らかの操作を行う際に、同時に逆の作用を持つメッセージ（あるいはメッセージ群）をアンドゥマネージャに記録します。
+アンドゥの要求があった時点で最新の記録内容を取り出して実行します。
+
+　アンドゥの実行としてメソッドを実行した場合にも、メソッド内から「アンドゥマネージャへの記録」が実行されますが、NSUndoManagerは **アンドゥの実行中に「アンドゥマネージャへの記録」が行われると、そのメッセージをリドゥ用のスタックに記録する** のです。
+
+アンドゥマネージャに操作を記録する
+------------------------------------
+
+アンドゥマネージャへ操作を記録するには２つの方法があります。
+
+.. code-block:: objective-c
+
+	- (void) registerUndoWithTarget: (id) target
+	                       selector: (SEL) aSelector
+	                         object: (id) anObject
 
 
+.. code-block:: objective-c
+
+	- (void) prepareWithInvocationTarget: (id) target
 
 
