@@ -3,6 +3,10 @@ Apple開発
 
 Contents:
 
+.. toctree::
+   :maxdepth: 1
+
+   tips
 
 .. toctree::
    :maxdepth: 3
