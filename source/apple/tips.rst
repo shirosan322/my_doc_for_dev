@@ -7,7 +7,8 @@ TIPS
 
 - :ref:`ディレクトリから指定した拡張子のファイルのみを抽出したい<get_specified_ext_files>`
 - :ref:`指定したパスがディレクトリかどうかチェックしたい<check_is_directory>`
-- :ref:`子Viewが親Viewのドラッグ&ドロップを横取りしてしまうのを回避したい<ignore_subview_dragevent>`
+- :ref:`ドラッグ＆ドロップで、特定のファイルのみドロップ可能にしたい<filer_dropfile>`
+- :ref:`子Viewが親Viewのドラッグ＆ドロップを横取りしてしまうのを回避したい<ignore_subview_dragevent>`
 
 
 -----
@@ -26,6 +27,7 @@ TIPS
 	NSArray *dirContents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:documentsDirectoryPath error:nil];
 	NSArray *files = [dirContents filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"pathExtension IN %@", extensions]];
 
+------
 
 .. _check_is_directory:
 
@@ -62,6 +64,54 @@ TIPS
 	    return YES;
 	}
 
+------
+
+.. _filer_dropfile:
+
+ドラッグ＆ドロップで、特定のファイルのみドロップ可能にする
+----------------------------------------------------------------
+
+NSDraggingDestinationプロトコルのoptionalメソッドである以下のメソッドを実装し、ここでドラッグしているファイルのパスを取得して、拡張子やディレクトリをチェックします。
+
+ .. code-block:: objecitve-c
+
+	- (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender;
+
+チェックした結果、ドラッグ＆ドロップ対象とするファイルでなかった場合は、**「NSDragOperationNone」** を返します。
+
+例）拡張子が.wavのファイルのみドロップ可能にする
+
+.. code-block:: objective-c
+	:linenos:
+
+	- (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender {
+	    NSString* urlString = nil;
+	    
+	    NSPasteboard *pboard = [sender draggingPasteboard];
+	    NSArray *objs = [pboard pasteboardItems];
+	    
+	    for (id item in objs) {
+	        NSArray* info = [item types];
+	        for(NSString *type in info) {
+	            if([[item types] containsObject:type]) {
+	                urlString = [item stringForType:type];
+	            }
+	        }
+	    }
+	    
+	    if (urlString != nil) {
+	        NSString* ext = [urlString pathExtension];
+	        if ([ext caseInsensitiveCompare:@"wav"] == NSOrderedSame) {
+	            highlight = YES;               // ドロップエリアをハイライトする.
+	            [self setNeedsDisplay: YES];   // 描画更新.
+	            return NSDragOperationGeneric; // ドロップ可能.
+	        }
+	    }
+	    return NSDragOperationNone; // ドロップ不可.
+	}
+
+
+------
 
 .. _ignore_subview_dragevent:
 
