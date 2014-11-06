@@ -19,6 +19,7 @@ Contents:
    android/index
    unity/index
    midi/index
+   test/index
 
 
 ---------
