@@ -5,14 +5,27 @@ TIPS
 目次
 =======
 
+共通
+----------
 - :ref:`ディレクトリから指定した拡張子のファイルのみを抽出したい<get_specified_ext_files>`
 - :ref:`指定したパスがディレクトリかどうかチェックしたい<check_is_directory>`
+- :ref:`アプリケーションの設定を保存したい<save_app_settings>`
+- :ref:`ユーザーデフォルトの値を削除したい<delete_userdefaults>`
+
+Cocoa
+----------
 - :ref:`ドラッグ＆ドロップで、特定のファイルのみドロップ可能にしたい<filer_dropfile>`
 - :ref:`子Viewが親Viewのドラッグ＆ドロップを横取りしてしまうのを回避したい<ignore_subview_dragevent>`
+- :ref:`ウィンドウを閉じるときにアプリケーションを一緒に終了したい<finish_app_with_close_close>`
+
+iOS
+-----
 
 
 -----
 
+共通
+========
 .. _get_specified_ext_files:
 
 ディレクトリから指定した拡張子のファイルのみを抽出する
@@ -66,6 +79,99 @@ TIPS
 
 ------
 
+.. _save_app_settings:
+
+アプリケーションの設定を保存する
+-----------------------------------
+アプリケーション実行中に設定した項目を保存しておき、次回の起動時にその設定を反映させたい場合があります。
+Cocoa / iOS では、これらの機能を実現する機能が予め提供されており、**ユーザーでフォルト** と呼ばれています。
+
+この、ユーザーデフォルトにアクセスするためのインタフェースを提供するのが、**NSUserDefaults** です。
+これを利用する事で、設定の保存／読込を用意に行う事ができます。
+
+**＜メソッド一覧＞**
+
+- 保存
+
+ .. code-block:: objective-c
+
+	- (void)setInteger:(NSInteger)value forKey:(NSString *)defaultName;
+	- (void)setFloat:(float)value forKey:(NSString *)defaultName;
+	- (void)setDouble:(double)value forKey:(NSString *)defaultName;
+	- (void)setBool:(BOOL)value forKey:(NSString *)defaultName;
+	- (void)setURL:(NSURL *)url forKey:(NSString *)defaultName NS_AVAILABLE(10_6, 4_0);
+	- (void)setObject:(id)value forKey:(NSString *)defaultName;
+
+- 読込
+
+ .. code-block:: objective-c
+
+	- (NSInteger)integerForKey:(NSString *)defaultName;
+	- (float)floatForKey:(NSString *)defaultName;
+	- (double)doubleForKey:(NSString *)defaultName;
+	- (BOOL)boolForKey:(NSString *)defaultName;
+	- (NSURL *)URLForKey:(NSString *)defaultName NS_AVAILABLE(10_6, 4_0);
+	- (id)objectForKey:(NSString *)defaultName;
+
+**＜使用例>**
+
+- 設定の保存
+
+ .. code-block:: objective-c
+	:linenos:
+
+	- (void)saveAppSettings {
+	    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	     
+	    [defaults setObject:hoge forKey:@"hogeKey"];
+	    [defaults setObject:moge forKey:@"mogeKey"];
+	    [defaults setInteger:value forKey:@"value"];
+	    [defaults setObject:imageData forKey:@"image"];
+	     
+	    [defaults synchronize]; // 設定内容をファイルに反映.
+	}
+
+
+- 設定の読込
+
+ .. code-block:: objective-c
+	:linenos:
+
+	- (void)loadAppSettings {
+	    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	     
+	    NSString* hoge = [defaults objectForKey:@"hogeKey"];
+	    MyClass* moge = [defaults objectForKey:@"mogeKey"];
+	    NSInteger value = [defaults integerForKey:@"value"];
+	    NSData* imageData = [defaults objectForKey:@"image"];
+	}
+
+-------
+
+.. _delete_userdefaults:
+
+ユーザーデフォルトの値を削除したい
+-------------------------------------
+
+開発中の場合、動作を確認するためにユーザーデフォルトの値を使用したくない場合があります。
+そういった場合は、メニューやボタンを一時的に用意しユーザーデフォルトを削除するようにしたい場合があります。
+そんなときは、以下のように記述しましょう。
+
+.. code-block:: objective-c
+
+	NSString* domainName = [[NSBundle mainBundle] bundleIdentifier];
+	[[NSUserDefaults standardUserDefaults] removePersistentDomainForName:domainName];
+
+------
+
+
+
+
+
+
+
+Cocoa
+========
 .. _filer_dropfile:
 
 ドラッグ＆ドロップで、特定のファイルのみドロップ可能にする
@@ -143,8 +249,33 @@ NSDraggingDestinationプロトコルのoptionalメソッドである以下のメ
 	...
 	@end
 
+-------
+
+.. _finish_app_with_close_close:
+
+ウィンドウを閉じるときにアプリケーションを一緒に終了する
+---------------------------------------------------------
+
+Macのアプリケーションでは、ウィンドウを閉じてもアプリケーションは終了していません。これがデフォルトの状態となっています。
+ですが、シングルウィンドウのアプリケーション等、ウィンドウを閉じると同時にアプリケーションが終了してくれた方が都合が良い場合もあります。
+そういった場合は、以下のデリゲートメソッドを実装します。
+
+.. code-block:: objective-c
+
+	- (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)theApplication
+	{
+	    return YES;
+	}
+
+ここで、**YES** を返す事で、ウィンドウを閉じると同時にアプリケーションを終了させる事ができます。
+
+-----
 
 
 
 
+
+
+iOS
+========
 
