@@ -14,5 +14,6 @@ Contents:
  	introduction
 	installation
 	view_types
+	asset
 	glossary
 
