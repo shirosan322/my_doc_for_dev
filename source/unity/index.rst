@@ -16,4 +16,5 @@ Contents:
 	view_types
 	asset
 	glossary
+	help_site
 
