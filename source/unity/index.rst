@@ -15,4 +15,5 @@ Contents:
 	installation
 	view_types
 	glossary
+	help_site
 
