@@ -10,6 +10,7 @@ Contents:
  	introduction
 	installation
 	view_types
+	asset
 	help_site
 	presentation_files
 
