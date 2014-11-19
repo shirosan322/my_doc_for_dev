@@ -173,8 +173,7 @@ Cocoa / iOS では、これらの機能を実現する機能が予め提供さ�
 
 - 先頭を確認する（〜ではじまる）
 
-　自分で作成したアプリケーション独自のファイルを書き出す場合に、ファイル名の先頭に特定の文字を設定する場合等があります。文字列に指定した接頭辞ががあるかどうかをチェックする場合は以下のようにします
-。
+　自分で作成したアプリケーション独自のファイルを書き出す場合に、ファイル名の先頭に特定の文字を設定する場合等があります。文字列に指定した接頭辞ががあるかどうかをチェックする場合は以下のようにします。
 
 .. code-block:: objective-c
 
@@ -195,6 +194,154 @@ Cocoa / iOS では、これらの機能を実現する機能が予め提供さ�
 
 並列処理を行う
 =====================
+
+　いくつかの処理を並行してバックグラウンドで実行させたい場合等がありますが、その場合は、**NSOperation** と **NSOperationQueue** を使用します。
+
+　簡単に流れを説明すると、**NSOperation** のサブクラスのmainメソッドにバックグラウンドで行いたい処理を記述し、そのサブクラスのインスタンスを **NSOperationQueue** のインスタンスの **addObject** メソッドに渡してqueueに追加します。
+このように実装する事で、Queueに渡されたオペレーションはスレッドセーフになっており、簡単にマルチスレッドを利用する事ができます。
+
+また、**addObject** メソッドの他に、**addOperationWithBlock** というメソッドもあり、こちらを利用するとNSOperatonクラスのサブクラスを作成しなくても、直接ブロック構文で処理を記述する事が可能です。
+
+例）NSOperationのサブクラスを生成して並列処理を行う
+
+.. code-block:: objective-c
+	:linenos:
+
+	#import <Cocoa/Cocoa.h>
+
+	@interface MyOperation : NSOperation {
+	    NSString *testMessage;
+	}
+	@property(retain) NSString *testMessage;
+	@end
+
+	@implementation MyOperation
+	@synthesize testMessage;
+	- (void)main
+	{
+	    while(!flg) {
+	        NSLog(@"%@", self.testMessage);
+	    }
+	}
+
+	- (void)dealloc
+	{
+	    [testMessage release];
+	    [super dealloc];
+	}
+	@end
+
+.. code-block:: objective-c
+	:linenos:
+
+	#import <Cocoa/Cocoa.h>
+	#import "SYOperation.h"
+
+	@interface SYController : NSObject {
+	    NSOperationQueue *myQueue;
+	}
+	@end
+
+	- (void)awakeFromNib
+	{
+	    myQueue = [[NSOperationQueue alloc] init];
+	    MyOperation *myOperation = [[MyOperation alloc] init];
+	    myOperation.testMessage = @"Hello, World!";
+	    [gQueue addOperation:myOperation];
+	}
+
+
+例）Block構文を利用して並列処理を行う
+
+.. code-block:: objective-c
+	:linenos:
+
+	#import <Cocoa/Cocoa.h>
+
+	@interface SYController : NSObject {
+	    NSOperationQueue *myQueue;
+	}
+	@end
+
+	- (void)awakeFromNib
+	{
+	    [opQueue_ addOperationWithBlock:^{
+	        @autoreleasepool {
+	            NSLog(@"%@", self.testMessage);
+	        }
+	    }];
+ 	}
+
+------
+
+**setMaxConcurrentOperationCount** を利用する事で、並列処理のタスク数を指定する事もできます。
+
+例）最大タスク数４で並列処理を行う場合
+
+.. code-block:: objective-c
+	:linenos:
+
+	#import <Cocoa/Cocoa.h>
+
+	@interface SYController : NSObject {
+	    NSOperationQueue *myQueue;
+	}
+	@end
+
+	- (void)awakeFromNib
+	{
+	    myQueue = [[NSOperationQueue alloc] init];
+	    [myQueue setMaxConcurrentOperationCount:4];
+	    MyOperation *myOperation = [[MyOperation alloc] init];
+	    myOperation.testMessage = @"Hello, World!";
+	    [gQueue addOperation:myOperation];
+	}
+
+----
+
+並列処理をキャンセルすることも可能です。この場合は、オペレーションクラスのmainメソッドでキャンセルされたときの動作を記述しておきます。
+
+　**isCancelled** を調べることでキャンセルされた事が分かるので、この値がYESになっていれば処理を中断させるように記述します。逆にmainメソッドの終わりまでキャンセルさせたくない場合には記述するしなくても構いません。
+
+.. code-block:: objective-c
+	:linenos:
+
+	- (void)main
+	{
+	    while(!flg) {
+	        NSLog(@"%@", self.testMessage);
+	        if ([self isCanceled])
+	            break;
+	    }
+	}
+
+実際にキャンセルする場合は、以下のように記述することで、すべての処理をキャンセルする事ができます。
+
+.. code-block:: objective-c
+	:linenos:
+
+	- (void)cancelAllOperation
+	{
+	    [myQueue cancelAllOperations];
+	}
+
+現在実行中の処理のみキャンセルしたい場合は、以下のように記述します。
+
+.. code-block:: objective-c
+	:linenos:
+
+	- (void)cancelExecutingOperation
+	{
+	    for (MyOperation *operation in [myQueue operations]) {
+	        if ([operation isExecuting] == YES) {
+	            [tOperation cancel];
+	        }
+	    }
+	}
+
+---------
+
+
 
 
 
