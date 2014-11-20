@@ -29,7 +29,7 @@ retain             strongと同じ。完全に歴史的経緯で残っている�
 ですが、これらの使い分けがいまいち分からなかったりします。ということで、細かく見て行きましょう。
 
 オブジェクトを保持する場合とデフォルトはstrongを使おう
--------------------------------------------------------
+============================================================
 
 所有属性を指定するときは、デフォルトではstrongを指定する事になります。(何も書かなかったら勝手にstrongが指定されています)
 
@@ -42,7 +42,7 @@ Objective-Cにおいては、メモリ管理の方法として「参照カウン
 
 
 weak属性の使いどころ
------------------------
+========================
 一般的には、「weak属性は循環参照を避けるために使用される」と説明されています。
 では、循環参照とはそもそも何でしょうか。
 
@@ -71,6 +71,7 @@ Outlet(IBoutlet)が参照するオブジェクトは、だいたいは何かの�
 しかし、次にあげるものは例外としてstrongで参照するようにしてください。
 
 - Nibのトップレベルオブジェクト（Windwow、他のViewに属さないView、NSObjectControllerなどのView以外のオブジェクト）
+
 - サブViewのうち、**-removeFromSuperview**を呼ぶ等して、一時的にビュー階層から取り除かれる可能性のあるもの
 
 
@@ -80,6 +81,7 @@ Outlet(IBoutlet)が参照するオブジェクトは、だいたいは何かの�
 あるオブジェクトの `Parent` が、別のオブジェクトChildを生成し、Childをstrongで保持しているとします。ChildがParentに何かの処理を委譲したければ、ChildはdelegateとしてParentを受け取る必要があります。
 
 .. code-block:: objective-c
+	:linenos:
 
 	// in Parent.h
 	@property (nonatomic, strong) Child* child;
@@ -92,6 +94,7 @@ Outlet(IBoutlet)が参照するオブジェクトは、だいたいは何かの�
 ここで、Child.hでdelegateがstrong属性で宣言されているとどうなるか考えてみましょう。
 
 .. code-block:: objective-c
+	:linenos:
 
 	// Child.h
 	@property (nonatomic, strong) id delegate;
@@ -101,14 +104,125 @@ Outlet(IBoutlet)が参照するオブジェクトは、だいたいは何かの�
 このような状況を避けるために、**delegateプロパティはweak指定すべき** と言われています。
 
 .. code-block:: objective-c
+	:linenos:
 
 	// Child.h
 	@property (nonatomic, weak) id delegate;
 
 
 ● ブロックプロパティ内のself
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ブロックとは、いわゆる **関数オブジェクト** で、メソッドの引数として渡してcallbackの処理を書いたりするのに使われます。
+プロパティから少し離れますが、ブロックにおけるselfへの参照というのも循環参照が発生しやすいポイントとなっています。
+ブロックは生成されるタイミングと実行されるタイミングが違うため、ブロックの処理を実行中にブロック内から参照されているオブジェクトがブロック外で解放されてしまうのを防ぐために、ブロック内からブロック外のオブジェクトを参照する場合はstrongで保持するようになっています。
+
+このとき、ViewControllerの持つプロパティをブロック内から参照すると、そのプロパティの保持者であるViewControllerオブジェクト自身へも強い参照を持つ事になります。ブロックもプロパティとして宣言されていた場合、**ブロックとViewControllerの間で循環参照ができてしまう***。
+
+例）循環参照ができるケース
+
+.. code-block:: objective-c
+	:linenos:
+
+	// ParentViewController.h
+	@property (nonatomic, copy) NSString *name;
+	@property (nonatomic, copy) void (^myCallback)(void);
+
+	// ParentViewController.m
+	myCallback = ^{
+	    NSLog(@"name: %@", self.name);
+	};
+
+この例のように、ブロックからselfを使いたい場合、selfへの強い参照が生まれ、循環参照が発生します。
+こういった状況を避けるために、一般的にはブロック内でselfを使いたい場合は、selfへの弱い参照を持つ変数を新たに定義して、その変数をブロック内で使用することになっています。
 
 
+.. code-block:: objective-c
+	:linenos:
+
+	// ParentViewController.m
+	__weak typeof(self) weakSelf = self;
+	myCallback = ^{
+	    NSLog(@"name: %@", self.name);
+	};
+
+ここで **「__weak」** というのが初めて出てきましたが、これはweak修飾子と呼ばれ、弱い参照を持つ変数を生成するのに使用します。これで循環参照は回避されました。
+しかし、このままでは weakSelf が nil になってしまう可能性があるので、次のように記述します。
+
+.. code-block:: objective-c
+	:linenos:
+
+	// ParentViewController.m
+	__weak typeof(self) weakSelf = self;
+	myCallback = ^{
+	    __strong typeof(self) strongSelf = weakSelf;
+	    if (!strongSelf) return;
+	    NSLog(@"name: %@", self.name);
+	    [strongSelf dosomething];
+	};
+
+ブロックの先頭でweakSelfへの強い参照を作っています。selfが既に解放されていた場合にはweakSelfはnilである為strongSelfもnilになりますが、weakSelfがselfを指している(selfが解放されずに残っている)場合にはstrongSelfはselfへの強い参照を持ちます。
+その為、ブロック内の処理の実行途中にselfが解放されてしまうことを防ぐ事が出来ます。
+
+この方法ではブロックの実行開始時にselfがnilである可能性をなくす事は出来ないため、最初にstrongSelfのnil判定を行う事が勧められています。
+
+
+copy属性
+=================
+この属性は文字通り、オブジェクトをcopyして受け取りたい場合に設定します。
+copyを設定すべきシチュエーションとしてよくあるのは次の２つです。
+
+● プロパティの方がMutableなサブクラスを持つ場合
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Mutable型な値をsetterに渡されたとき、strongでそれを保持してしまうと意図せず値が変更されてしまう可能性が出てきます。それを防ぐために、**「NSString」「NSArray」「NSDictionary」** 等の、Mutableなサブクラスを持つ型にはcopy属性をプロパティに指定する事が推奨されています。
+Immutable型の値が渡された際には浅いコピーが行われるため、パフォーマンスの悪化はおきません。
+
+.. code-block:: objective-c
+
+	@property (nonatomic, copy) NSString* name;
+
+
+ブロック型のオブジェクトをプロパティにする場合
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ブロックオブジェクトは生成時にメモリのスタック領域に実体が確保されるのですが、スタック領域に確保されたオブジェクトはそのスコープの終了時に解放されてしまいます。
+ブロックオブジェクトを生成されたスコープの外でも使えるようにするためには、ブロックオブジェクトをコピーしてヒープ領域に複製を作ってやる必要があります。
+
+ただい、ARCがオンになっている場合は、**強い参照の変数へ代入される場合** や **returnの返り値として返される場合** にはコンパイラが自動的にcopy操作のコードを挿入してくれます。
+
+.. code-block:: objective-c
+	:linenos:
+
+	// myClass.h
+	@interface myClass : NSObject {
+        int (^myBlock)(int);
+	}
+
+	// myClass.m
+	// 強い参照の変数myBlockへブロックオブジェクトが代入される。この時、実際には
+	// copyされてヒープに確保されたブロックオブジェクトがmyBlockの参照先となる。
+	myBlock = ^int (int i) { 
+        return i;
+	};
+
+
+一方、メソッドや関数の引数として渡されたブロックは自動ではcopyされません。 setterの引数として渡されたオブジェクトがcopyされるようにする為には、copy属性をプロパティの宣言時に指定する必要があります。
+
+.. code-block:: objective-c
+
+	@property (nonatomic, copy) int (^myBlock)(int);
+
+copy属性が指定された事でsetterにおいてcopyメソッドの呼び出しが行われ、ヒープ領域に確保されたオブジェクトがプロパティとして保持される事になります。
+
+.. code-block:: objective-c
+	:linenos:
+
+	// setterはこんなイメージのものが自動で定義される。自分で実装する訳ではない。
+	- (void)setMyBlock:(int (^) (int i))myBlock
+	{
+	    if (_myBlock != myBlock) {
+	        [_myBlock release];
+	        _myBlock = [myBlock copy];
+	    }
+	}
 
 
