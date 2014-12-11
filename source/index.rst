@@ -12,12 +12,13 @@ Welcome to My Document For Dev's documentation!
 Contents:
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
-   sphinx/index
    apple/index
    android/index
    unity/index
+   git/index
+   sphinx/index
    midi/index
    test/index
 
