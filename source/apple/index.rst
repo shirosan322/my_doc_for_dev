@@ -7,6 +7,7 @@ Contents:
    :maxdepth: 1
 
    tips
+   use-gcc
 
 .. toctree::
    :maxdepth: 3
