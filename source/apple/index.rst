@@ -7,7 +7,8 @@ Contents:
    :maxdepth: 1
 
    tips
-   use-gcc
+   xcode/compiler
+   xcode/use-gcc
 
 .. toctree::
    :maxdepth: 3

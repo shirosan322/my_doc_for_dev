@@ -67,12 +67,14 @@ Xcode4.2等でGCC 4.0を利用する場合はもう少し複雑になります�
 
 2. 以下のコマンドを実行して、シンボリックリンクを作成します.
 
-※10.4しか使用しない場合は、10.4だけで構いません。
+ ※10.4しか使用しない場合は、10.4だけで構いません。
 
  .. code-block:: bash
 
  	$ sudo ln -s /Xcode3/SDKs/MacOSX10.4u.sdk ./MacOSX10.4u.sdk
  	$ sudo ln -s /Xcode3/SDKs/MacOSX10.5.sdk ./MacOSX10.5.sdk
+
+ ※ここではシンボリックリンクを作成していますが、直接コピーしても構いません。
 
 3. GCC 4.0 を使用できるようにする
 -------------------------------------
@@ -95,5 +97,24 @@ Xcode4.2等でGCC 4.0を利用する場合はもう少し複雑になります�
 	$ sudo ln -s "/Xcode3/Library/Xcode/Plug-ins/GCC 4.0.xcplugin" ./GCC\ 4.0.xcplugin
 
 
+4. GCC 4.0用に、PPCに対応する
+----------------------------------
+Appleは、Xcdoe4では、Intelプラットフォームのみをサポートしているので、GCC4.0はPPCをサポートしてビルドされていません。
+GCC4.0でPPC/PPC64バイナリをコンパイルするためには、それに対応した「as」という名前のGNUアセンブラが必要です。
+そこで、PPCに対応したXcode3の「as」のシンボリックリンクを作成します。
+
+
+1. 以下のディレクトリに移動する.
+
+ .. code-block:: bash
+
+ 	$ cd /Developer/usr/libexec/gcc/powerpc-apple-drawin10/4.2.0
+
+2. 元々の「as」のバックアップをとっておき、Xcode3の「as」のシンボリックリンクを作成する.
+
+ .. code-block:: bash
+
+ 	$ sudo mv as as.bak
+ 	$ sudl ln -s /Xcode3/usr/bin/as ./as
 
 
