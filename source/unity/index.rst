@@ -5,7 +5,14 @@ Unity
 Contents:
 
 .. toctree::
-	:maxdepth: 2
+	:maxdepth: 1
+
+	tips
+
+-------
+
+.. toctree::
+	:maxdepth: 1
 
  	introduction
 	installation
