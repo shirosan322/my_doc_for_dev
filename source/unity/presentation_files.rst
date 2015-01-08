@@ -2,4 +2,5 @@
 発表資料
 ========================
 
-- :download:`E2、E事向け発表資料 <../../data/unity/PresentationFiles/Unity_Presentation.pdf>`
+- :download:`E2勉強会発表資料 <data/Unity_Presentation.pdf>`
+- :download:`E事発表資料 <data/Unity_Presentation_EngAll.pdf>`

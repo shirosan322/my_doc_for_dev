@@ -7,6 +7,7 @@ TIPS
 
 共通
 ----------
+- :ref:`ファイルパスをNSStringからNSURLに変換したい<convert_path_nsstring_to_nsurl>`
 - :ref:`ディレクトリから指定した拡張子のファイルのみを抽出したい<get_specified_ext_files>`
 - :ref:`指定したパスがディレクトリかどうかチェックしたい<check_is_directory>`
 - :ref:`アプリケーションの設定を保存したい<save_app_settings>`
@@ -24,10 +25,38 @@ iOS
 -----
 
 
+その他
+------------
+- :ref:`Pascal文字列を扱いたい <use_pascal_string>`
+
+
+
 -----
 
 共通
 ========
+
+.. _convert_path_nsstring_to_nsurl:
+
+ファイルパスをNSStringからNSURLに変換する
+--------------------------------------------
+
+.. code-block:: objective-c
+	:linenos:
+
+	NSString* strFilePath = @"/Users/uroshika/hoge/あああ/hoge.txt"; 
+	NSURL* fileURL = [NSURL fileURLWithPath:strFilePath]; 
+
+↓これで行けると思ったのに上手く動かなかったコード。
+
+.. code-block:: objective-c
+	:linenos:
+
+	NSString* strFilePath = @"/Users/uroshika/hoge/あああ/hoge.txt"; 
+	NSURL* fileURL = [NSURL URLWithString:strFilePath]; 
+
+``URLWithString`` にだまされるな！！（T0T）
+
 .. _get_specified_ext_files:
 
 ディレクトリから指定した拡張子のファイルのみを抽出する
@@ -59,8 +88,8 @@ iOS
 
 
 - 引数
- - path        : チェックするパス
- - isDirectory : チェックしたパスがディレクトリかどうかが設定される。
+ 	- path        : チェックするパス
+ 	- isDirectory : チェックしたパスがディレクトリかどうかが設定される。
 
 - 戻り値
 	- YES : 存在する、NO : 存在しない
@@ -356,7 +385,7 @@ Cocoa
 
 NSDraggingDestinationプロトコルのoptionalメソッドである以下のメソッドを実装し、ここでドラッグしているファイルのパスを取得して、拡張子やディレクトリをチェックします。
 
- .. code-block:: objecitve-c
+ .. code-block:: objective-c
 
 	- (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender;
 
@@ -456,3 +485,43 @@ Macのアプリケーションでは、ウィンドウを閉じてもアプリ�
 iOS
 ========
 
+
+その他
+========
+
+.. _use_pascal_string:
+
+Pascal文字列を扱う
+========================
+
+Macアプリケーション開発をしていると、Pascal文字列を扱いたい場合が出てきます。
+以前は、``::CopyCStringToPascal(src, det)`` のようなメソッドが使用されていましたが、
+OS X 10.4 から DEPRECATED になっており、CFStringを使用するように書かれています。
+ここでは、CFStringを使用してPascal文字列を扱う方法を記述します。
+また、CFStringを利用するために「CoreFoundation.h」をインクルードしておく必要があります。
+
+.. code-block:: c++
+
+	#include <CoreFoundation/CoreFoundation.h>
+
+
+C文字列からPascal文字列を取得する
+----------------------------------
+
+.. code-block:: c++
+	:linenos:
+
+	void GetPascalString_(const char* src,Str255 dst) {
+	    CFStringRef cfStr = CFStringCreateWithCString( NULL, src, CFStringGetSystemEncoding() );
+	    CFStringGetPascalString(cfStr, dst, 255, CFStringGetSystemEncoding());
+	}
+
+なお、NSStringとCFStringRefはキャストするだけで変換可能です。よって、NSStringからPascal文字列を取得するときは以下のようにします。
+
+.. code-block:: c++
+	:linenos:
+
+	- (void)GetPascalString_:(NSString*)src Dst:(Str255)dst {
+	    CFStringRef cfStr = (CFStringRef)src;
+	    CFStringGetPascalString(cfStr, dst, 255, CFStringGetSystemEncoding());
+	}
