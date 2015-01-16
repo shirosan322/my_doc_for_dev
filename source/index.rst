@@ -14,6 +14,7 @@ Contents:
 .. toctree::
    :maxdepth: 1
 
+   tips/index
    apple/index
    android/index
    unity/index
