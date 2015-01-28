@@ -7,12 +7,7 @@ Contents:
    :maxdepth: 1
 
    tips
-   xcode/compiler
-   xcode/use-gcc
-
-.. toctree::
-   :maxdepth: 3
-
+   mac_dev_center_doc/index
+   xcode/index
    objective-c2.0/index
-   cocoa/index
    ios/index
