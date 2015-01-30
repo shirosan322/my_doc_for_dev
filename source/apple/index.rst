@@ -10,4 +10,5 @@ Contents:
    mac_dev_center_doc/index
    xcode/index
    objective-c2.0/index
+   cocoa/index
    ios/index
