@@ -17,6 +17,7 @@ Contents:
  	introduction
 	installation
 	view_types
+	rigidbody
 	ugui
 	asset
 	help_site
