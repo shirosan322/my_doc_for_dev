@@ -14,13 +14,8 @@ Contents:
 .. toctree::
 	:maxdepth: 1
 
- 	introduction
-	installation
-	view_types
-	rigidbody
-	ugui
-	asset
-	help_site
+	about/index
+	help/index
 	presentation_files
 
 	glossary
