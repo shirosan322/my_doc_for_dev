@@ -22,6 +22,7 @@ Contents:
    sphinx/index
    midi/index
    test/index
+   monetize/index
 
 
 ---------
