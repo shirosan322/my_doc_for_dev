@@ -23,6 +23,7 @@ Contents:
    midi/index
    test/index
    monetize/index
+   study_site
 
 
 ---------
