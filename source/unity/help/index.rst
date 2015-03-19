@@ -9,6 +9,7 @@ Contents:
 
 	general
 	study
+	ui
 	about_sound
 	vr_ar
 	speed_up
