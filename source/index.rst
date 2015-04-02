@@ -15,14 +15,9 @@ Contents:
    :maxdepth: 1
 
    tips/index
-   apple/index
-   android/index
-   unity/index
-   git/index
-   sphinx/index
-   midi/index
-   test/index
-   monetize/index
+   application/index
+   tools/index
+   development/index
    study_site
 
 

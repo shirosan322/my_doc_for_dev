@@ -1,4 +1,4 @@
-TIPS集
+TIPS
 =============
 
 Contents:
