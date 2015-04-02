@@ -9,3 +9,4 @@ Contents:
    HowToInstall
    themes
    HowToMakePDF
+   extenstions
