@@ -7,6 +7,6 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
-   audio/index
+   dsp/index
    midi/index
    test/index
