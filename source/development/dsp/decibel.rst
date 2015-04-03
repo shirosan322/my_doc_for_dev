@@ -4,6 +4,25 @@ dB（デシベル）
 
 音響工学などの分野で、物理量をレベル表現により表すときに使用される単位です。
 
+
+参考（対数の公式）
+======================
+
+	.. math::
+
+		a^y = x ⇔ y = \log{a^x}
+	
+		\log{xy} = \log{x} + \log{y}
+
+		\log{\frac{x}{y}} = \log{x} - \log{y}
+
+		\log{x^y} = y \log{x}
+
+		\log_a{b} \times \log_b{c} = \log_a{c}
+
+		\log_b{c} = \frac{\log_a{c}}{\log_a{b}}
+
+
 ベル
 ==============
 
@@ -83,14 +102,14 @@ dBによる表現は、音の強さ（:ref:`音圧レベル <sound_pressure_leve
 
 .. math::
 
-	Lp = 10\log_{10} \frac{p^2}{p_0^2} = 20 \log_{10} \frac{p}{p_0}
+	Lp = 10\log_{10} \bigg( \frac{p^2}{p_0^2} \bigg) = 20 \log_{10} \bigg( \frac{p}{p_0} \bigg)
 
 
 ここで、基準値
 
 .. math::
 
-	p_0 = 2 × 10^{−5} [Pa]
+	p_0 = 20 \times 10^{−6} [Pa]
 
 は、健康な人間の最小可聴音圧であり、これは世界共通の定義です。
 
@@ -118,7 +137,6 @@ dBによる表現は、音の強さ（:ref:`音圧レベル <sound_pressure_leve
 5000倍	      73.98dB	
 10000倍	      80.00dB	
 ============= ==========
-
 
 
 
