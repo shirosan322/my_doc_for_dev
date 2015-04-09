@@ -10,6 +10,8 @@ Contents:
    tips
 
 .. toctree::
-   :maxdepth: 3
+	:maxdepth: 1
 
-   different_merge_rebase
+	different_merge_rebase
+
+	gitlab

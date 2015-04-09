@@ -5,7 +5,7 @@
 Contents:
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    git/index
    sphinx/index
