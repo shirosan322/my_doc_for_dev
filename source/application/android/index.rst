@@ -8,3 +8,5 @@ Contents:
 	:maxdepth: 2
 
 	tips
+	selector
+	style

@@ -2,7 +2,8 @@
 TIPS
 =======
 
-:ref:`カメラの向いている方向に移動する <move_to_camera>`
+- :ref:`カメラの向いている方向に移動する <move_to_camera>`
+- :ref:`uGUIの部品を解像度に合わせて表示する <scale_canvas_ugui>`
 
 
 ------
@@ -58,4 +59,26 @@ zero 			Vector3(0, 0, 0)
 	    }
 	}
 
+
+
+.. _scale_canvas_ugui:
+
+uGUIの部品を解像度に合わせて表示する
+====================================
+
+uGUIで画面を作っていて、右上にスコアを表示していた。
+
+Gameビューでゲーム画面を確認しているときは正しく右上に表示されていましたが、
+Android端末にインストールして実行したところ、スコア表示が真ん中に寄ってしまい、
+テキストの文字も非常に小さくなってしまいました。
+
+どうすりゃいいか分からなかったので、Facebookの「Unityユーザー助け合い所」で質問してみた。
+そしたら、超的確な回答をもらったので記録しておく。
+
+1. Canvasのインスペクタより、Canvas Scaler の「Scale Mode」を「Scale With Screen Size」にする
+2. Reference Resolution のX, Yを、基準としたい解像度(720*1280など)に設定する
+3. 「Screen Match Mode」を「Expand」に変更する。
+4. Textのインスペクタより、Rect Transform の Anchor Presets(インスペクタ内左寄りの四角いマーク)をクリックしShift+Altを押しながら右上を指定
+
+これで、バッチリGameビューと同じように右上に表示された。
 

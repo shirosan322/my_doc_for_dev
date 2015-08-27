@@ -8,5 +8,6 @@ Contents:
 
    HowToInstall
    themes
+   autobuild
    HowToMakePDF
    extensions
