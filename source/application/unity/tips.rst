@@ -4,9 +4,69 @@ TIPS
 
 - :ref:`カメラの向いている方向に移動する <move_to_camera>`
 - :ref:`uGUIの部品を解像度に合わせて表示する <scale_canvas_ugui>`
+- :ref:`別のSceneを開く <open_other_scene>`
+- :ref:`Thetaの画像をUnityで見る <view_image_of_theta>`
+- :ref:`カメラの向いている方向に移動する <move_to_camera>`
+- :ref:`PointerEventData から Hit したオブジェクトを取得する <raycast_hit_obj>`
 
 
 ------
+
+.. _open_other_scene:
+
+別のSceneを開く
+===========================
+
+1. [File - Build Settings...]を選択して、[Scenes in Build]にロードしたいSceneをドラッグ＆ドロップで追加する.
+
+2. 以下の関数を呼び出す.
+
+ .. code-block:: c#
+
+ 	public static void LoadLevel(int index);
+ 	public static void LoadLevel(string name);
+
+
+ ============= ==========================
+ パラメーター
+ ============= ==========================
+ index		  ロードするレベルのインデックス
+ name		  ロードするレベルの名前
+ ============= ==========================
+
+
+.. _view_image_of_theta:
+
+Thetaの画像をUnityで見る
+===========================
+
+1. Thetaで撮影した全天球画像を取り込む.
+
+2. 取り込んだ画像を選択して、Inspectorから[Texture Type]を[CubeMap]に変更し、[Mapping]を[Latitude-Longitude Layout(Cylindrical)]にして[Apply]を押す.
+
+ .. image:: images/theta_image_for_unity1.png
+
+3. 新しくマテリアルを作成する.
+
+ .. image:: images/theta_image_for_unity2.png
+
+
+4. 作成したマテリアルの[Shader]を[Skybox]->[CubeMap]に変更する.
+
+ .. image:: images/theta_image_for_unity3.png
+
+5. CubeMapという項目のCubemap(HDR)の[Select]ボタンを押して、先ほど[Texture Type]を[CubeMap]に変更した全天球画像をセットする.
+
+ .. image:: images/theta_image_for_unity4.png
+
+6. メニューの[Window - Lighting]を選択する.
+
+ .. image:: images/theta_image_for_unity5.png
+
+7. [Lighting]ウィンドウの[Scene]タブを選択し、[Environment Lighting]の[Skybox]にさっき作ったマテリアルをセットする.
+
+ .. image:: images/theta_image_for_unity6.png
+
 
 .. _move_to_camera:
 
@@ -60,7 +120,6 @@ zero 			Vector3(0, 0, 0)
 	}
 
 
-
 .. _scale_canvas_ugui:
 
 uGUIの部品を解像度に合わせて表示する
@@ -81,4 +140,22 @@ Android端末にインストールして実行したところ、スコア表示�
 4. Textのインスペクタより、Rect Transform の Anchor Presets(インスペクタ内左寄りの四角いマーク)をクリックしShift+Altを押しながら右上を指定
 
 これで、バッチリGameビューと同じように右上に表示された。
+
+
+.. _raycast_hit_obj:
+
+PointerEventData から Hit したオブジェクトを取得する
+========================================================
+
+Ex. PointerDownのEventDataから、反応したGameObjectを取得して、HogeHogeと同じかチェックする.
+
+.. code-block:: c#
+	:linenos:
+
+	public void OnPointerDown(PointerEventData eventData) {
+		if (eventData.pointerPressRaycast.gameObject == HogeHoge) {
+		}
+	}
+
+>>>>>>> Stashed changes
 
