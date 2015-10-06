@@ -4,8 +4,9 @@ Sphinx〜ドキュメント作成ツール〜
 Contents:
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
+   tips
    HowToInstall
    themes
    autobuild
