@@ -35,14 +35,17 @@ Apple LLVM Compiler について
 Apple LLVM Compiler は、従来のGCCコンパイラを置き換えるものです。
 
 - LLVMの特徴
+
 	- コンパイルが速い
 	- コンパイルされたコードが速い
 	- エラーメッセージが分かりやすい
 	- 他のツールと連携しやすい
 
 LLVMにある様々なプロジェクトの中で、Xcodeのコンパイラとして関係しているのは以下の２つです。
+
 - LLVM Core
 	- 最適化やコード生成機能を持つ.
+
 - clang
 	- LLVM Coreに対する C/C++/Objective-C 用のフロントエンド.
 

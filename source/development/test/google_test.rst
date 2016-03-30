@@ -1,14 +1,16 @@
-===============
+###################
 Google Test
-===============
+###################
 
+******************************
 XCodeでGoogleTestを利用する
-===========================
+******************************
 
 gtest.frameworkを作成する
---------------------------------
+===================================
 
 1. 以下のサイトから「googletest」をダウンロードします。「googletest」は「Google Code」で公開されています。
+
  https://code.google.com/p/googletest/
 
  もしくは、以下のコマンドを実行してリポジトリからチェックアウトしてください。
@@ -30,13 +32,14 @@ gtest.frameworkを作成する
 6. 選択した出力先にディレクトリが作成され、「Library - Frameworks」に「gtest.framework」が保存されている事を確認します。
 
 GoogleTestを使用する
---------------------------------
+===================================
 
 1. テストを実行したいプロジェクトに「Command Line Tools」のターゲットを追加し、「UnitTests」等の適当な名前を付けておきます。
 
 2. 「gtest.framework」をプロジェクトに追加します。すると、「UnitTests」の「Build Phases - Link Binary with Libraries」に「gtest.framework」が追加されます。
 
 3. 「UnitTests」の「Build Settings」の「Apple LLVM 6.0 - Language - C++ - C++ Standard Library」の項目を「libstdc++(GNU CLL standard library)」に変更します。
+
  ※これをしないとリンクエラーが発生します。
 
 
