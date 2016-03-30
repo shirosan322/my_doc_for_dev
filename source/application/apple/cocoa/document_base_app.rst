@@ -27,9 +27,12 @@ NSDocumentのサブクラスでオーバーライドする関数
 	    return @"MyDocument";
 	}
 
-- \- (void)windowControllerDidLoadNib:(NSWindowController *) aController
+
+- \- (void)windowControllerDidLoadNib:(NSWindowController \*) aController
+
 	- DocumentがNibファイルの「File's Owner」である場合に、Nibファイルがロードされた後に呼び出される。
 	- Controllerの初期化等をここで行う.
+
 
  .. code-block:: objective-c
 
@@ -47,6 +50,7 @@ NSDocumentのサブクラスでオーバーライドする関数
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 - \- (void)makeWindowControllers
+
 	- ここで、サブクラス化した自前のWindowControllerを生成します。
 	- 生成したWindowControllerをDocumentに追加します。(addWindowControllerを呼び出す。)
 		- このタイミングで、DocumentのWindowController管理変数に生成したWindowControllerが追加され、WindowControllerの「document」にもDocumentのインスタンスがSetされ関連づけが完了する。
